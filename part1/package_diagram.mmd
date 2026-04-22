@@ -1,0 +1,27 @@
+classDiagram
+class PresentationLayer {
+    <<Interface>>
+    Api Endpoints
+    Frontend UI
+    Login/register
+}
+
+class BusinessLogicLayer {
+    <<App models and logic>>
+    User Model
+    Place Model
+    Review Model
+    Amenity Model
+    Backend logic
+    Auth access
+}
+
+class PersistenceLayer {
+    <<Data storage and retrieval>>
+    DatabaseAccess
+    File storage
+    Repositories
+}
+
+PresentationLayer ..> BusinessLogicLayer : imports
+BusinessLogicLayer ..> PersistenceLayer : access
