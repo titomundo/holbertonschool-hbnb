@@ -1,0 +1,12 @@
+sequenceDiagram
+    participant User
+    participant API
+    participant Backend
+    participant Database
+
+    User->>API: POST /register { credentials }
+    API->>Backend: Validate user credentials
+    Backend->>Database: Store user data
+    Database-->>Backend: User created
+    Backend-->>API: Return Response
+    API-->>User: Return 201 / 401 status code
