@@ -1,0 +1,12 @@
+sequenceDiagram
+    actor User
+    participant API
+    participant Backend
+    participant Database@{ "type": "database"}
+
+    User->>API: GET /places?parameters
+    API->>Backend: Validate request
+    Backend->>Database: Fetch places or place by ID
+    Database-->>Backend: Get places
+    Backend-->>API: Format to JSON
+    API-->>User: Return 200 success
