@@ -1,0 +1,12 @@
+sequenceDiagram
+    actor User
+    participant API
+    participant Backend
+    participant Database@{ "type": "database"}
+
+    User->>API: POST places/create { data }
+    API->>Backend: Validate data
+    Backend->>Database: Store place data
+    Database-->>Backend: Place created
+    Backend-->>API: Return Response
+    API-->>User: Return 201 created
