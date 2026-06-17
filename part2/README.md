@@ -8,7 +8,7 @@ This python application is using a Facade Design Pattern to implement Logic, Bus
 
 The project is built using the following structure.
 
-´´´text
+```text
 hbnb/
 ├── app/
 │   ├── __init__.py
@@ -36,7 +36,7 @@ hbnb/
 ├── config.py
 ├── requirements.txt
 ├── README.md
-´´´
+```
 
 - The app/ folder includes the core logic of the application.
 - The api/ folder contains all the endpoints for requests.
@@ -46,7 +46,7 @@ hbnb/
 
 ## Install and run
 
-´´´bash
+```bash
 pip install -r requirements.txt
 python run.py
-´´´
+```
