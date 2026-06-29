@@ -5,7 +5,7 @@ from app.models.place import Place
 
 class Review(BaseModel):
     def __init__(self, text: str, rating: int, place: Place, user: User):
-        if 1 > rating > 5:
+        if 1 > rating or rating > 5:
             raise ValueError("range must be between 1 and 5")
 
         super().__init__()

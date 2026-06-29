@@ -4,10 +4,10 @@ from app.models.review import Review
 
 def test_place_creation():
     owner = User(first_name="Alice", last_name="Smith", email="alice.smith@example.com")
-    place = Place(title="Cozy Apartment", description="A nice place to stay", price=100, latitude=37.7749, longitude=-122.4194, owner=owner)
+    place = Place(title="Cozy Apartment", description="A nice place to stay", price=100, latitude=-17.7749, longitude=-172.4194, owner=owner)
 
     # Adding a review
-    review = Review(text="Great stay!", rating=5, place=place, user=owner)
+    review = Review(text="Great stay!", rating=1, place=place, user=owner)
     place.add_review(review)
 
     assert place.title == "Cozy Apartment"
