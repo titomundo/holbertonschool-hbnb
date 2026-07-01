@@ -3,7 +3,6 @@ from app.models.user import User
 
 
 class Place(BaseModel):
-
     def __init__(
         self,
         title: str,
@@ -11,7 +10,7 @@ class Place(BaseModel):
         owner: User,
         latitude: float = None,
         longitude: float = None,
-        description: str= "",
+        description: str = "",
     ):
         if len(title) > 100:
             raise ValueError("title has a maximum length of 100 characters")
@@ -32,7 +31,7 @@ class Place(BaseModel):
         self.latitude = latitude
         self.longitude = longitude
         self.owner = owner
-        self.reviews = [] # places can have multiple reviews
+        self.reviews = []  # places can have multiple reviews
 
     def add_review(self, review):
         self.reviews.append(review)
