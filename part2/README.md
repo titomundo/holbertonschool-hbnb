@@ -1,11 +1,7 @@
-# System design and structure
-
-## HBNB Project
-
-This python application is using a Facade Design Pattern to implement Logic, Business and Presentation layers.
+# Part 2: Implementation of Business Logic and API Endpoints
+In this step of the project we create the scaffold for our application and implement the models and business logic in order to create a basic RESTful API with CRUD operations. Only the `GET`, `POST` and `PUT` endpoints will be added for now. (The `DELETE` endpoints will be added later on the project). We will also create tests and validate our API.
 
 ## Structure
-
 The project is built using the following structure.
 
 ```text
@@ -38,15 +34,40 @@ hbnb/
 ├── README.md
 ```
 
-- The app/ folder includes the core logic of the application.
-- The api/ folder contains all the endpoints for requests.
-- The models/ folder defines the structures used to define objects for our aplication.
-- The services/ folder is a facade layer to interact between all application layers.
-- The persistence/ folder is used to interact with the database (in-memory storage for the time being).
+- The `app/` folder includes the core logic of the application.
+- The `api/` folder contains all the endpoints for requests.
+- The `models/` folder defines the structures used to define objects for our aplication.
+- The `services/` folder is a facade layer to interact between all application layers.
+- The `persistence/` folder is used to interact with the database (in-memory storage for the time being).
+
+## API Endpoints
+
+> All API endpoints have the `/api/v1/` prefix. \
+> Example: `/api/v1/users/<user_id>` will get the user for that specific ID
+
+### User Endpoints
+| METHOD | ENDPOINT | RESULT |
+|--------|----------|--------|
+|GET|`/users`|List of all users|
+|GET|`/users/<user_id>`|Retrieve user by ID|
+|POST|`/users`|Create a new user|
+|PUT|`/users/<user_id>`|Update user by ID|
+
+### Amenities Endpoints
+| METHOD | ENDPOINT | RESULT |
+|--------|----------|--------|
+|GET|`/amenities`|List of all amenities|
+|GET|`/amenities/<amenity_id>`|Retrieve amenity by ID|
+|POST|`/amenities`|Create a new amenity|
+|PUT|`/amenities/<amenity_id>`|Update amenity by ID|
 
 ## Install and run
-
+> You may have to use `python` or `pip3` instead of `python` and `pip`.
 ```bash
+python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 python run.py
 ```
+
+The application will be available at http://localhost:5000
