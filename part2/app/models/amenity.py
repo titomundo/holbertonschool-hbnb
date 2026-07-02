@@ -1,5 +1,6 @@
 from app.models.base import BaseModel
 
+
 class Amenity(BaseModel):
     def __init__(self, name: str):
         if len(name) > 50:
@@ -7,3 +8,6 @@ class Amenity(BaseModel):
 
         super().__init__()
         self.name = name
+
+    def as_dict(self):
+        return {"id": self.id, "name": self.name}
