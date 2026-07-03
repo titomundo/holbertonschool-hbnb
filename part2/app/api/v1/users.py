@@ -1,5 +1,4 @@
 from flask_restx import Namespace, Resource, fields
-from jsonschema.validators import validate
 from app.services import facade
 
 api = Namespace("users", description="User operations")
