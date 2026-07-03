@@ -61,6 +61,14 @@ hbnb/
 |POST|`/amenities`|Create a new amenity|
 |PUT|`/amenities/<amenity_id>`|Update amenity by ID|
 
+### Place Endpoints
+| METHOD | ENDPOINT | RESULT |
+|--------|----------|--------|
+|GET|`/places`|List of all places|
+|GET|`/places/<place_id>`|Retrieve place by ID|
+|POST|`/places`|Create a new place|
+|PUT|`/place/<places_id>`|Update place by ID|
+
 ## Install and run
 > You may have to use `python` or `pip3` instead of `python` and `pip`.
 ```bash
