@@ -1,5 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
+from app.models.user import User
+import re
 
 api = Namespace("users", description="User operations")
 
@@ -32,7 +34,11 @@ class UserList(Resource):
         if existing_user:
             return {"error": "Email already registered"}, 400
 
-        new_user = facade.create_user(user_data)
+        try:
+            new_user = facade.create_user(user_data)
+        except ValueError as e:
+            return {"error": str(e)}, 400
+
         return new_user.as_dict(), 201
 
     @api.response(200, "List of users")
@@ -63,6 +69,22 @@ class UserResource(Resource):
         """Update an existing user"""
         user_data = api.payload
         # beware that so far you can update your email to one already in use
+        # we really can't allow users to update their email until we have
+        # JWT tokens to know the actual email of the user making the request
+
+        first_name = user_data.get("first_name")
+        last_name = user_data.get("last_name")
+        email = user_data.get("email")
+
+        if len(first_name) > 50:
+            return {"error": "first_name has a maximum length of 50 characters"}, 400
+
+        if len(last_name) > 50:
+            return {"error": "last_name has a maximum length of 50 characters"}, 400
+
+        if not re.match(User._email_regex, email):
+            return {"error": "Not a valid email"}, 400
+
         user = facade.update_user(user_id, user_data)
 
         if not user:
