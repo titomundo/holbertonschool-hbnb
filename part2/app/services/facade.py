@@ -14,50 +14,45 @@ class HBnBFacade:
     #
     # User Methods
     #
-    def create_user(self, user_data):
+    def create_user(self, user_data) -> User:
         user = User(**user_data)
         self.user_repo.add(user)
         return user
 
-    def get_user(self, user_id):
+    def get_user(self, user_id) -> User | None:
         return self.user_repo.get(user_id)
 
-    def get_all_users(self):
+    def get_all_users(self) -> list[User]:
         return self.user_repo.get_all()
 
-    def update_user(self, user_id, user_data):
-        user = self.user_repo.update(user_id, user_data)
+    def update_user(self, user_id, user_data) -> User | None:
+        return self.user_repo.update(user_id, user_data)
 
-        if user:
-            return user
-
-    def get_user_by_email(self, email):
+    def get_user_by_email(self, email) -> User | None:
         return self.user_repo.get_by_attribute("email", email)
 
     #
     # Amenity Methods
     #
-    def create_amenity(self, amenity_data):
+    def create_amenity(self, amenity_data) -> Amenity:
         amenity = Amenity(**amenity_data)
         self.amenity_repo.add(amenity)
         return amenity
 
-    def get_amenity(self, amenity_id):
+    def get_amenity(self, amenity_id) -> Amenity | None:
         return self.amenity_repo.get(amenity_id)
 
-    def get_all_amenities(self):
+    def get_all_amenities(self) -> list[Amenity]:
         return self.amenity_repo.get_all()
 
-    def update_amenity(self, amenity_id, amenity_data):
-        amenity = self.amenity_repo.update(amenity_id, amenity_data)
-
-        if amenity:
-            return amenity
+    def update_amenity(self, amenity_id, amenity_data) -> Amenity | None:
+        return self.amenity_repo.update(amenity_id, amenity_data)
+            
 
     #
     # Place Methods
     #
-    def create_place(self, place_data):
+    def create_place(self, place_data) -> Place:
         price = place_data.get("price")
         latitude = place_data.get("latitude")
         longitude = place_data.get("longitude")
@@ -73,13 +68,13 @@ class HBnBFacade:
         self.place_repo.add(place)
         return place
 
-    def get_place(self, place_id):
+    def get_place(self, place_id) -> Place | None:
         return self.place_repo.get(place_id)
 
-    def get_all_places(self):
+    def get_all_places(self) -> list[Place]:
         return self.place_repo.get_all()
 
-    def update_place(self, place_id, place_data):
+    def update_place(self, place_id, place_data) -> Place | None:
         price = place_data.get("price")
         latitude = place_data.get("latitude")
         longitude = place_data.get("longitude")
