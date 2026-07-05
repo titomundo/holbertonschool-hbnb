@@ -45,6 +45,7 @@ class PlaceList(Resource):
     @api.expect(place_model, validate=True)
     @api.response(201, "Place successfully created")
     @api.response(400, "Invalid input data")
+    @api.response(404, "Amenity or User not found")
     def post(self):
         """Register a new place"""
         place_data = api.payload
@@ -68,7 +69,11 @@ class PlaceList(Resource):
 
             place_data["amenities"] = new_amenities
 
-        new_place = facade.create_place(place_data)
+        try:
+            new_place = facade.create_place(place_data)
+        except ValueError as e:
+            return {"error": str(e)}, 400
+
         return new_place.as_dict(), 200
 
     @api.response(200, "List of places retrieved successfully")
@@ -116,3 +121,12 @@ class PlaceResource(Resource):
             return {"error": "Place not found"}, 404
 
         return {"message": "Place updated successfully"}, 200
+
+    @api.route("/<place_id>/reviews")
+    class PlaceReviewList(Resource):
+        @api.response(200, "List of reviews for the place retrieved successfully")
+        @api.response(404, "Place not found")
+        def get(self, place_id):
+            """Get all reviews for a specific place"""
+            # Placeholder for logic to return a list of reviews for a place
+            pass
