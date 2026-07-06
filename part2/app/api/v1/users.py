@@ -1,7 +1,8 @@
-from flask_restx import Namespace, Resource, fields
-from app.services import facade
-from app.models.user import User
 import re
+
+from app.models.user import User
+from app.services import facade
+from flask_restx import Namespace, Resource, fields
 
 api = Namespace("users", description="User operations")
 
@@ -78,10 +79,16 @@ class UserResource(Resource):
         if len(first_name) > 50:
             return {"error": "first_name has a maximum length of 50 characters"}, 400
 
+        if not first_name.strip():
+            return {"error": "First name cannot be empty"}, 400
+
         if len(last_name) > 50:
             return {"error": "last_name has a maximum length of 50 characters"}, 400
 
-        if not re.match(User._email_regex, email):
+        if not last_name.strip():
+            return {"error": "Last name cannot be empty"}, 400
+
+        if not re.match(self._email_regex, email) or not email.strip():
             return {"error": "Not a valid email"}, 400
 
         user = facade.update_user(user_id, user_data)
