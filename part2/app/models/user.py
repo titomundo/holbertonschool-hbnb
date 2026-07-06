@@ -1,5 +1,6 @@
-from app.models.base import BaseModel
 import re
+
+from app.models.base import BaseModel
 
 
 class User(BaseModel):
@@ -8,16 +9,22 @@ class User(BaseModel):
 
     def __init__(self, first_name: str, last_name: str, email: str, is_admin=False):
         if len(first_name) > 50:
-            raise ValueError("first_name has a maximum length of 50 characters")
+            raise ValueError("First name has a maximum length of 50 characters")
+
+        if not first_name.strip():
+            raise ValueError("First name cannot be empty")
 
         if len(last_name) > 50:
-            raise ValueError("last_name has a maximum length of 50 characters")
+            raise ValueError("Last name has a maximum length of 50 characters")
 
-        if not re.match(self._email_regex, email):
+        if not last_name.strip():
+            raise ValueError("Last name cannot be empty")
+
+        if not re.match(self._email_regex, email) or not email.strip():
             raise ValueError("Not a valid email")
 
         if email in User._emails:
-            raise ValueError("email is already in use")
+            raise ValueError("Email is already in use")
 
         super().__init__()
         self.first_name = first_name

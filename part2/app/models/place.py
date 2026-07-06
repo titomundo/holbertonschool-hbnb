@@ -14,16 +14,17 @@ class Place(BaseModel):
         amenities=[],
     ):
         if len(title) > 100:
-            raise ValueError("title has a maximum length of 100 characters")
+            raise ValueError("Title has a maximum length of 100 characters")
+
+        if not title.strip():
+            raise ValueError("Title cannot be empty")
 
         if price < 0:
-            raise ValueError("price must be a positive value")
-
+            raise ValueError("Price must be a positive number")
         if -90.0 > latitude or latitude > 90.0:
-            raise ValueError("latitude range must be between -90.0 and 90.0")
-
+            raise ValueError("Latitude range must be between -90.0 and 90.0")
         if -180.0 > longitude or longitude > 180.0:
-            raise ValueError("longitude range must be between -180.0 and 180.0")
+            raise ValueError("Longitude range must be between -180.0 and 180.0")
 
         super().__init__()
         self.title = title

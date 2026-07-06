@@ -3,6 +3,9 @@ from app.models.base import BaseModel
 
 class Review(BaseModel):
     def __init__(self, text: str, rating: int, place_id: str, user_id: str):
+        if not text.strip():
+            raise ValueError("Text cannot be empty")
+
         if 1 > rating or rating > 5:
             raise ValueError("range must be between 1 and 5")
 
