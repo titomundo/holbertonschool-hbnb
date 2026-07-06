@@ -88,7 +88,7 @@ class UserResource(Resource):
         if not last_name.strip():
             return {"error": "Last name cannot be empty"}, 400
 
-        if not re.match(self._email_regex, email) or not email.strip():
+        if not re.match(User._email_regex, email) or not email.strip():
             return {"error": "Not a valid email"}, 400
 
         user = facade.update_user(user_id, user_data)
