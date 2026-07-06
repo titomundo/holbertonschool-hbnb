@@ -2,6 +2,7 @@ from app.persistence.repository import InMemoryRepository
 from app.models.user import User
 from app.models.amenity import Amenity
 from app.models.place import Place
+from app.models.review import Review
 
 
 class HBnBFacade:
@@ -47,7 +48,6 @@ class HBnBFacade:
 
     def update_amenity(self, amenity_id, amenity_data) -> Amenity | None:
         return self.amenity_repo.update(amenity_id, amenity_data)
-            
 
     #
     # Place Methods
@@ -74,6 +74,15 @@ class HBnBFacade:
     def get_all_places(self) -> list[Place]:
         return self.place_repo.get_all()
 
+    def get_reviews_by_place(self, place_id) -> list[Review]:
+        reviews = []
+        for review in self.review_repo._storage.values():
+
+            if review.place_id == place_id:
+                reviews.append(review)
+
+        return reviews
+
     def update_place(self, place_id, place_data) -> Place | None:
         price = place_data.get("price")
         latitude = place_data.get("latitude")
@@ -90,3 +99,32 @@ class HBnBFacade:
 
         if place:
             return place
+
+    #
+    # Review Methods
+    #
+    def create_review(self, review_data) -> Review | None:
+        review = Review(**review_data)
+
+        if review:
+            self.review_repo.add(review)
+
+        return review
+
+    def get_review(self, review_id) -> Review | None:
+        return self.review_repo.get(review_id)
+
+    def get_all_reviews(self) -> list[Review]:
+        return self.review_repo.get_all()
+
+    def update_review(self, review_id, review_data) -> Review | None:
+        rating = review_data.get("rating")
+        if 1 > rating or rating > 5:
+            raise ValueError("range must be between 1 and 5")
+
+        place = self.review_repo.update(review_id, review_data)
+        return place
+
+    def delete_review(self, review_id):
+        # TODO: ensure there is no leftover data with relationships to places
+        self.review_repo.delete(review_id)
