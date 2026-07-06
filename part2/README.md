@@ -69,6 +69,15 @@ hbnb/
 |POST|`/places`|Create a new place|
 |PUT|`/place/<places_id>`|Update place by ID|
 
+### Review Endpoints
+| METHOD | ENDPOINT | RESULT |
+|--------|----------|--------|
+|GET|`/reviews`|List of all reviews|
+|GET|`/reviews/<review_id>`|Retrieve review by ID|
+|POST|`/reviews`|Create a new review|
+|PUT|`/reviews/<review_id>`|Update review by ID|
+|DELETE|`/reviews/<review_id>`|Delete review by ID|
+
 ## Install and run
 > You may have to use `python` or `pip3` instead of `python` and `pip`.
 ```bash
