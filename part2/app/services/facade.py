@@ -122,8 +122,8 @@ class HBnBFacade:
         if 1 > rating or rating > 5:
             raise ValueError("range must be between 1 and 5")
 
-        place = self.review_repo.update(review_id, review_data)
-        return place
+        review = self.review_repo.update(review_id, review_data)
+        return review
 
     def delete_review(self, review_id):
         # TODO: ensure there is no leftover data with relationships to places
