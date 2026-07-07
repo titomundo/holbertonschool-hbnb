@@ -52,15 +52,11 @@ class AmenityResource(Resource):
     def put(self, amenity_id):
         """Update an amenity's information"""
         amenity_data = api.payload
-        name = amenity_data.get("name")
 
-        if not name.strip():
-            return {"error": "Name cannot be empty"}, 400
-
-        if len(name) > 50:
-            return {"error": "Name has a maximum length of 50 characters"}, 400
-
-        amenity = facade.update_amenity(amenity_id, amenity_data)
+        try:
+            amenity = facade.update_amenity(amenity_id, amenity_data)
+        except ValueError as e:
+            return {"error": str(e)}, 400
 
         if not amenity:
             return {"error": "amenity not found"}, 404
