@@ -67,31 +67,15 @@ class UserResource(Resource):
     @api.response(400, "Invalid input data")
     def put(self, user_id):
         """Update an existing user"""
-        user_data = api.payload
         # beware that so far you can update your email to one already in use
         # we really can't allow users to update their email until we have
         # JWT tokens to know the actual email of the user making the request
+        user_data = api.payload
 
-        first_name = user_data.get("first_name")
-        last_name = user_data.get("last_name")
-        email = user_data.get("email")
-
-        if len(first_name) > 50:
-            return {"error": "first_name has a maximum length of 50 characters"}, 400
-
-        if not first_name.strip():
-            return {"error": "First name cannot be empty"}, 400
-
-        if len(last_name) > 50:
-            return {"error": "last_name has a maximum length of 50 characters"}, 400
-
-        if not last_name.strip():
-            return {"error": "Last name cannot be empty"}, 400
-
-        if not re.match(User._email_regex, email) or not email.strip():
-            return {"error": "Not a valid email"}, 400
-
-        user = facade.update_user(user_id, user_data)
+        try:
+            user = facade.update_user(user_id, user_data)
+        except ValueError as e:
+            return {"error": str(e)}, 400
 
         if not user:
             return {"error": "User not found"}, 404
