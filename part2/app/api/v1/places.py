@@ -1,6 +1,6 @@
-from flask_restx import Namespace, Resource, fields
 from app.models import place
 from app.services import facade
+from flask_restx import Namespace, Resource, fields
 
 api = Namespace("places", description="Place operations")
 
@@ -127,9 +127,12 @@ class PlaceResource(Resource):
     @api.response(400, "Invalid input data")
     def put(self, place_id):
         """Update a place's information"""
-
         place_data = api.payload
-        place = facade.update_place(place_id, place_data)
+
+        try:
+            place = facade.update_place(place_id, place_data)
+        except ValueError as e:
+            return {"error": str(e)}, 400
 
         if not place:
             return {"error": "Place not found"}, 404

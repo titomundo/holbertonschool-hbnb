@@ -53,17 +53,6 @@ class HBnBFacade:
     # Place Methods
     #
     def create_place(self, place_data) -> Place:
-        price = place_data.get("price")
-        latitude = place_data.get("latitude")
-        longitude = place_data.get("longitude")
-
-        if price < 0.0:
-            raise ValueError("Price should be a non-negative Float")
-        if -90.0 > latitude or latitude > 90.0:
-            raise ValueError("Latitude range must be between -90.0 and 90.0")
-        if -180.0 > longitude or longitude > 180.0:
-            raise ValueError("Longitude range must be between -180.0 and 180.0")
-
         place = Place(**place_data)
         self.place_repo.add(place)
         return place
@@ -84,21 +73,7 @@ class HBnBFacade:
         return reviews
 
     def update_place(self, place_id, place_data) -> Place | None:
-        price = place_data.get("price")
-        latitude = place_data.get("latitude")
-        longitude = place_data.get("longitude")
-
-        if price < 0.0:
-            raise ValueError("Price should be a non-negative Float")
-        if -90.0 > latitude or latitude > 90.0:
-            raise ValueError("Latitude range must be between -90.0 and 90.0")
-        if -180.0 > longitude or longitude > 180.0:
-            raise ValueError("Longitude range must be between -180.0 and 180.0")
-
-        place = self.place_repo.update(place_id, place_data)
-
-        if place:
-            return place
+        return self.place_repo.update(place_id, place_data)
 
     #
     # Review Methods
