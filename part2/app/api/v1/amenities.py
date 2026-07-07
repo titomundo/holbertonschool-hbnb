@@ -1,5 +1,5 @@
-from flask_restx import Namespace, Resource, fields
 from app.services import facade
+from flask_restx import Namespace, Resource, fields
 
 api = Namespace("amenities", description="Amenity operations")
 
@@ -17,7 +17,12 @@ class AmenityList(Resource):
     def post(self):
         """Register a new amenity"""
         amenity_data = api.payload
-        new_amenity = facade.create_amenity(amenity_data)
+
+        try:
+            new_amenity = facade.create_amenity(amenity_data)
+        except ValueError as e:
+            return {"error": str(e)}, 400
+
         return new_amenity.as_dict(), 201
 
     @api.response(200, "List of amenities retrieved successfully")
@@ -47,6 +52,14 @@ class AmenityResource(Resource):
     def put(self, amenity_id):
         """Update an amenity's information"""
         amenity_data = api.payload
+        name = amenity_data.get("name")
+
+        if not name.strip():
+            return {"error": "Name cannot be empty"}, 400
+
+        if len(name) > 50:
+            return {"error": "Name has a maximum length of 50 characters"}, 400
+
         amenity = facade.update_amenity(amenity_id, amenity_data)
 
         if not amenity:
