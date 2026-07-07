@@ -78,16 +78,11 @@ class ReviewResource(Resource):
     def put(self, review_id):
         """Update a review's information"""
         review_data = api.payload
-        text = review_data.get("text")
-        rating = review_data.get("rating")
 
-        if not text.strip():
-            return {"error": "Text cannot be empty"}, 400
-
-        if 1 > rating or rating > 5:
-            return {"error": "range must be between 1 and 5"}, 400
-
-        review = facade.update_review(review_id, review_data)
+        try:
+            review = facade.update_review(review_id, review_data)
+        except ValueError as e:
+            return {"error": str(e)}, 400
 
         if not review:
             return {"error": "Review not found"}, 404
