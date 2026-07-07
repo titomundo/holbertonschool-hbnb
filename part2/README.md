@@ -79,7 +79,7 @@ hbnb/
 |DELETE|`/reviews/<review_id>`|Delete review by ID|
 
 ## Install and run
-> You may have to use `python` or `pip3` instead of `python` and `pip`.
+> You may have to use `python3` or `pip3` instead of `python` and `pip`.
 ```bash
 python -m venv .venv
 source .venv/bin/activate
