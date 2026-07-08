@@ -1,0 +1,84 @@
+import re
+
+from app.models.user import User
+from app.services import facade
+from flask_restx import Namespace, Resource, fields
+
+api = Namespace("users", description="User operations")
+
+# Define the user model for input validation and documentation
+user_model = api.model(
+    "User",
+    {
+        "first_name": fields.String(
+            required=True, description="First name of the user"
+        ),
+        "last_name": fields.String(required=True, description="Last name of the user"),
+        "email": fields.String(required=True, description="Email of the user"),
+        "password": fields.String(required=True, description="User Password"),
+    },
+)
+
+
+@api.route("/")
+class UserList(Resource):
+    @api.expect(user_model, validate=True)
+    @api.response(201, "User successfully created")
+    @api.response(400, "Invalid input data")
+    def post(self):
+        """Register a new user"""
+        user_data = api.payload
+
+        # Simulate email uniqueness check (to be replaced by real validation with persistence)
+        existing_user = facade.get_user_by_email(user_data["email"])
+
+        if existing_user:
+            return {"error": "Email already registered"}, 400
+
+        try:
+            new_user = facade.create_user(user_data)
+        except ValueError as e:
+            return {"error": str(e)}, 400
+
+        return new_user.as_dict(), 201
+
+    @api.response(200, "List of users")
+    def get(self):
+        """Get a list of all users"""
+        users = [u.as_dict() for u in facade.get_all_users()]
+        return users, 200
+
+
+@api.route("/<user_id>")
+class UserResource(Resource):
+    @api.response(200, "User details retrieved successfully")
+    @api.response(404, "User not found")
+    def get(self, user_id):
+        """Get user details by ID"""
+        user = facade.get_user(user_id)
+
+        if not user:
+            return {"error": "User not found"}, 404
+
+        return user.as_dict(), 200
+
+    @api.expect(user_model, validate=True)
+    @api.response(200, "User updated successfully")
+    @api.response(404, "User not found")
+    @api.response(400, "Invalid input data")
+    def put(self, user_id):
+        """Update an existing user"""
+        # beware that so far you can update your email to one already in use
+        # we really can't allow users to update their email until we have
+        # JWT tokens to know the actual email of the user making the request
+        user_data = api.payload
+
+        try:
+            user = facade.update_user(user_id, user_data)
+        except ValueError as e:
+            return {"error": str(e)}, 400
+
+        if not user:
+            return {"error": "User not found"}, 404
+
+        return user.as_dict(), 200
