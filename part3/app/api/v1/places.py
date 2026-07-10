@@ -134,12 +134,9 @@ class PlaceResource(Resource):
     def put(self, place_id):
         """Update a place's information"""
         place_data = api.payload
-        user_id = get_jwt_identity()
         place = facade.get_place(place_id)
 
-        print(f"user {user_id}")
-
-        if place.owner_id != user_id:
+        if place.owner_id != get_jwt_identity():
             return {"error": "Unauthorized"}, 403
 
         try:
