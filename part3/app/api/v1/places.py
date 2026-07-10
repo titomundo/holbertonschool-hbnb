@@ -1,3 +1,5 @@
+from flask_jwt_extended import get_jwt_identity, jwt_required
+
 from app.models import place
 from app.services import facade
 from flask_restx import Namespace, Resource, fields
@@ -42,7 +44,6 @@ place_model = api.model(
         "price": fields.Float(required=True, description="Price per night"),
         "latitude": fields.Float(required=True, description="Latitude of the place"),
         "longitude": fields.Float(required=True, description="Longitude of the place"),
-        "owner_id": fields.String(required=True, description="ID of the owner"),
         "owner": fields.Nested(user_model, description="Owner of the place"),
         "amenities": fields.List(
             fields.Nested(amenity_model), description="List of amenities"
@@ -56,6 +57,7 @@ place_model = api.model(
 
 @api.route("/")
 class PlaceList(Resource):
+    @jwt_required()
     @api.expect(place_model, validate=True)
     @api.response(201, "Place successfully created")
     @api.response(400, "Invalid input data")
@@ -63,12 +65,15 @@ class PlaceList(Resource):
     def post(self):
         """Register a new place"""
         place_data = api.payload
-
-        user = facade.get_user(place_data["owner_id"])
         amenities = place_data.get("amenities")
+
+        user_id = get_jwt_identity()
+        user = facade.get_user(user_id)
 
         if not user:
             return {"error": "user not found"}, 404
+        else:
+            place_data["owner_id"] = user_id
 
         if amenities:
             new_amenities = []
@@ -121,6 +126,7 @@ class PlaceResource(Resource):
             "amenities": place.amenities,
         }
 
+    @jwt_required()
     @api.expect(place_model, validate=True)
     @api.response(200, "Place updated successfully")
     @api.response(404, "Place not found")
@@ -128,9 +134,16 @@ class PlaceResource(Resource):
     def put(self, place_id):
         """Update a place's information"""
         place_data = api.payload
+        user_id = get_jwt_identity()
+        place = facade.get_place(place_id)
+
+        print(f"user {user_id}")
+
+        if place.owner_id != user_id:
+            return {"error": "Unauthorized"}, 403
 
         try:
-            place = facade.update_place(place_id, place_data)
+            facade.update_place(place_id, place_data)
         except ValueError as e:
             return {"error": str(e)}, 400
 
