@@ -2,6 +2,8 @@ import re
 
 from app.models.user import User
 from app.services import facade
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended.view_decorators import jwt_required
 from flask_restx import Namespace, Resource, fields
 
 api = Namespace("users", description="User operations")
@@ -62,7 +64,8 @@ class UserResource(Resource):
 
         return user.as_dict(), 200
 
-    @api.expect(user_model, validate=True)
+    @jwt_required()
+    @api.expect(user_model)
     @api.response(200, "User updated successfully")
     @api.response(404, "User not found")
     @api.response(400, "Invalid input data")
@@ -73,6 +76,9 @@ class UserResource(Resource):
         # JWT tokens to know the actual email of the user making the request
         user_data = api.payload
 
+        if user_id != get_jwt_identity():
+            return {"error": "Unauthorized"}, 403
+
         try:
             user = facade.update_user(user_id, user_data)
         except ValueError as e:
@@ -81,4 +87,4 @@ class UserResource(Resource):
         if not user:
             return {"error": "User not found"}, 404
 
-        return user.as_dict(), 200
+        return {"message": "User updated successfully"}, 200
