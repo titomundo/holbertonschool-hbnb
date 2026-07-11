@@ -1,4 +1,7 @@
+from jsonschema.validators import validate
+
 from app.services import facade
+from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restx import Namespace, Resource, fields
 
 api = Namespace("reviews", description="Review operations")
@@ -11,7 +14,6 @@ review_model = api.model(
         "rating": fields.Integer(
             required=True, description="Rating of the place (1-5)"
         ),
-        "user_id": fields.String(required=True, description="ID of the user"),
         "place_id": fields.String(required=True, description="ID of the place"),
     },
 )
@@ -19,6 +21,7 @@ review_model = api.model(
 
 @api.route("/")
 class ReviewList(Resource):
+    @jwt_required()
     @api.expect(review_model, validate=True)
     @api.response(201, "Review successfully created")
     @api.response(400, "Invalid input data")
@@ -26,16 +29,23 @@ class ReviewList(Resource):
     def post(self):
         """Register a new review"""
         review_data = api.payload
-        user = facade.get_user(review_data["user_id"])
         place = facade.get_place(review_data["place_id"])
-
-        if not user:
-            return {"error": "user not found"}, 404
+        user_id = get_jwt_identity()
 
         if not place:
             return {"error": "place not found"}, 404
+        
+        if place.owner_id == user_id:
+            return {"error": "You cannot review your own place"}, 400
+
+        reviews = facade.get_reviews_by_place(place.id)
+
+        for review in reviews:
+            if review.user_id == user_id:
+                return {"error": "You have already reviewed this place"}, 400
 
         try:
+            review_data["user_id"] = user_id 
             review = facade.create_review(review_data)
         except ValueError as e:
             return {"error": str(e)}, 400
