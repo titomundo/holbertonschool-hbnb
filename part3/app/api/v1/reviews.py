@@ -1,8 +1,7 @@
-from jsonschema.validators import validate
-
 from app.services import facade
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restx import Namespace, Resource, fields
+from jsonschema.validators import validate
 
 api = Namespace("reviews", description="Review operations")
 
@@ -34,7 +33,7 @@ class ReviewList(Resource):
 
         if not place:
             return {"error": "place not found"}, 404
-        
+
         if place.owner_id == user_id:
             return {"error": "You cannot review your own place"}, 400
 
@@ -45,7 +44,7 @@ class ReviewList(Resource):
                 return {"error": "You have already reviewed this place"}, 400
 
         try:
-            review_data["user_id"] = user_id 
+            review_data["user_id"] = user_id
             review = facade.create_review(review_data)
         except ValueError as e:
             return {"error": str(e)}, 400
@@ -75,7 +74,6 @@ class ReviewResource(Resource):
     def get(self, review_id):
         """Get review details by ID"""
         review = facade.get_review(review_id)
-        print(review)
         if not review:
             return {"error": "review not found"}, 404
 
@@ -100,13 +98,14 @@ class ReviewResource(Resource):
             return {"error": "Unauthorized action"}, 403
 
         try:
-            review_data["user_id"] = user_id 
+            review_data["user_id"] = user_id
             facade.update_review(review_id, review_data)
         except ValueError as e:
             return {"error": str(e)}, 400
 
         return {"message": "review updated sucessfully"}, 200
 
+    @jwt_required()
     @api.response(200, "Review deleted successfully")
     @api.response(404, "Review not found")
     def delete(self, review_id):
@@ -115,6 +114,9 @@ class ReviewResource(Resource):
 
         if not review:
             return {"error": "review not found"}, 404
+
+        if review.user_id != get_jwt_identity():
+            return {"error": "Unauthorized action"}, 403
 
         facade.delete_review(review_id)
         return {"message": "review deleted sucessfully"}, 200
