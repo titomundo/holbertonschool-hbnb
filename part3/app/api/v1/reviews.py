@@ -108,6 +108,7 @@ class ReviewResource(Resource):
     @jwt_required()
     @api.response(200, "Review deleted successfully")
     @api.response(404, "Review not found")
+    @api.response(403, "Unauthorized")
     def delete(self, review_id):
         """Delete a review"""
         review = facade.get_review(review_id)
