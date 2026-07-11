@@ -81,21 +81,29 @@ class ReviewResource(Resource):
 
         return review.as_dict(), 200
 
+    @jwt_required()
     @api.expect(review_model)
     @api.response(200, "Review updated successfully")
     @api.response(404, "Review not found")
     @api.response(400, "Invalid input data")
+    @api.response(403, "Unauthorized")
     def put(self, review_id):
         """Update a review's information"""
         review_data = api.payload
-
-        try:
-            review = facade.update_review(review_id, review_data)
-        except ValueError as e:
-            return {"error": str(e)}, 400
+        user_id = get_jwt_identity()
+        review = facade.get_review(review_id)
 
         if not review:
             return {"error": "Review not found"}, 404
+
+        if review.user_id != user_id:
+            return {"error": "Unauthorized action"}, 403
+
+        try:
+            review_data["user_id"] = user_id 
+            facade.update_review(review_id, review_data)
+        except ValueError as e:
+            return {"error": str(e)}, 400
 
         return {"message": "review updated sucessfully"}, 200
 
