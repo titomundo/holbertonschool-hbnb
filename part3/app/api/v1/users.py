@@ -29,10 +29,10 @@ class UserList(Resource):
     def post(self):
         """Register a new user"""
         user_data = api.payload
-        user = get_jwt()
+        current_user = get_jwt()
 
-        if not user.get("is_admin"):
-            return {'error': 'Admin privileges required'}, 403
+        if not current_user.get("is_admin"):
+            return {"error": "Admin privileges required"}, 403
 
         # Simulate email uniqueness check (to be replaced by real validation with persistence)
         if facade.get_user_by_email(user_data["email"]):
@@ -77,10 +77,18 @@ class UserResource(Resource):
         # we really can't allow users to update their email until we have
         # JWT tokens to know the actual email of the user making the request
         user_data = api.payload
+        email = user_data.get('email')
+        current_user = get_jwt()
 
-        if user_id != get_jwt_identity():
-            return {"error": "Unauthorized"}, 403
+        if not current_user.get("is_admin"):
+            return {"error": "Admin privileges required"}, 403
 
+        if email:
+            # Check if email is already in use
+            existing_user = facade.get_user_by_email(email)
+            if existing_user and existing_user.id != user_id:
+                return {'error': 'Email is already in use'}, 400
+                
         try:
             user = facade.update_user(user_id, user_data)
         except ValueError as e:
