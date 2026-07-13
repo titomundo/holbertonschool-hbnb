@@ -1,8 +1,5 @@
-import re
-
-from app.models.user import User
 from app.services import facade
-from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import get_jwt, get_jwt_identity
 from flask_jwt_extended.view_decorators import jwt_required
 from flask_restx import Namespace, Resource, fields
 
@@ -24,17 +21,21 @@ user_model = api.model(
 
 @api.route("/")
 class UserList(Resource):
+    @jwt_required()
     @api.expect(user_model, validate=True)
     @api.response(201, "User successfully created")
     @api.response(400, "Invalid input data")
+    @api.response(403, "Admin privileges required")
     def post(self):
         """Register a new user"""
         user_data = api.payload
+        user = get_jwt()
+
+        if not user.get("is_admin"):
+            return {'error': 'Admin privileges required'}, 403
 
         # Simulate email uniqueness check (to be replaced by real validation with persistence)
-        existing_user = facade.get_user_by_email(user_data["email"])
-
-        if existing_user:
+        if facade.get_user_by_email(user_data["email"]):
             return {"error": "Email already registered"}, 400
 
         try:
