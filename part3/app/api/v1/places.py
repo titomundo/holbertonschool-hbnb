@@ -1,7 +1,7 @@
-from flask_jwt_extended import get_jwt_identity, jwt_required
-
 from app.models import place
 from app.services import facade
+from flask_jwt_extended import (current_user, get_jwt, get_jwt_identity,
+                                jwt_required)
 from flask_restx import Namespace, Resource, fields
 
 api = Namespace("places", description="Place operations")
@@ -136,18 +136,20 @@ class PlaceResource(Resource):
         """Update a place's information"""
         place_data = api.payload
         place = facade.get_place(place_id)
+        current_user = get_jwt()
+        is_admin = current_user.get("is_admin", False)
 
         if not place:
             return {"error": "Place not found"}, 404
 
-        if place.owner_id != get_jwt_identity():
+        if not is_admin and place.owner_id != get_jwt_identity():
             return {"error": "Unauthorized"}, 403
 
         try:
             facade.update_place(place_id, place_data)
         except ValueError as e:
             return {"error": str(e)}, 400
-        
+
         return {"message": "Place updated successfully"}, 200
 
     @api.route("/<place_id>/reviews")
