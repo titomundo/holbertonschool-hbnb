@@ -1,5 +1,5 @@
 from app.services import facade
-from flask_jwt_extended import get_jwt, get_jwt_identity
+from flask_jwt_extended import get_jwt
 from flask_jwt_extended.view_decorators import jwt_required
 from flask_restx import Namespace, Resource, fields
 
@@ -70,7 +70,7 @@ class UserResource(Resource):
     @api.response(200, "User updated successfully")
     @api.response(404, "User not found")
     @api.response(400, "Invalid input data")
-    @api.response(403, "Unauthorized")
+    @api.response(403, "Admin privileges required")
     def put(self, user_id):
         """Update an existing user"""
         # beware that so far you can update your email to one already in use
