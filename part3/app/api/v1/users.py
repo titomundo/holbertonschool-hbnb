@@ -5,6 +5,7 @@ from flask_restx import Namespace, Resource, fields
 
 api = Namespace("users", description="User operations")
 
+
 # Define the user model for input validation and documentation
 user_model = api.model(
     "User",
@@ -77,7 +78,7 @@ class UserResource(Resource):
         # we really can't allow users to update their email until we have
         # JWT tokens to know the actual email of the user making the request
         user_data = api.payload
-        email = user_data.get('email')
+        email = user_data.get("email")
         current_user = get_jwt()
 
         if not current_user.get("is_admin"):
@@ -87,8 +88,8 @@ class UserResource(Resource):
             # Check if email is already in use
             existing_user = facade.get_user_by_email(email)
             if existing_user and existing_user.id != user_id:
-                return {'error': 'Email is already in use'}, 400
-                
+                return {"error": "Email is already in use"}, 400
+
         try:
             user = facade.update_user(user_id, user_data)
         except ValueError as e:

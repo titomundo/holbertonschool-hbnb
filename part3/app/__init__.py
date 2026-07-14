@@ -1,24 +1,21 @@
-from app.api.v1.amenities import api as amenities_ns
-from app.api.v1.auth import api as auth_ns
-from app.api.v1.places import api as places_ns
-from app.api.v1.reviews import api as review_ns
-from app.api.v1.users import api as users_ns
-from app.services import facade
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from flask_restx import Api
+from flask_sqlalchemy import SQLAlchemy
+
+bcrypt = Bcrypt()
+jwt = JWTManager()
+db = SQLAlchemy()
 
 
 def create_app(config_class="config.DevelopmentConfig"):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    bcrypt = Bcrypt()
     bcrypt.init_app(app)
-
-    jwt = JWTManager()
     jwt.init_app(app)
+    db.init_app(app)
 
     api = Api(
         app,
@@ -28,26 +25,12 @@ def create_app(config_class="config.DevelopmentConfig"):
         doc="/api/v1/",
     )
 
-    # THESE USERS ARE TEMPORARY UNTIL WE GET PERSISTENT STORAGE 
-    # AND WE CAN HAVE A DEFAULT ADMIN USER, THIS IS ONLY FOR TESTING
-    facade.create_user(
-        {
-            "first_name": "admin",
-            "last_name": "admin",
-            "email": "admin@mail.com",
-            "password": "password",
-            "is_admin": True
-        }
-    )
-
-    facade.create_user(
-        {
-            "first_name": "user",
-            "last_name": "user",
-            "email": "user@mail.com",
-            "password": "password",
-        }
-    )
+    # Move imports down here to prevent circular import errors
+    from app.api.v1.amenities import api as amenities_ns
+    from app.api.v1.auth import api as auth_ns
+    from app.api.v1.places import api as places_ns
+    from app.api.v1.reviews import api as review_ns
+    from app.api.v1.users import api as users_ns
 
     # Placeholder for API namespaces (endpoints will be added later)
     api.add_namespace(users_ns, path="/api/v1/users")
