@@ -22,7 +22,7 @@ user_model = api.model(
 
 @api.route("/")
 class UserList(Resource):
-    # @jwt_required() TEMPORAL
+    @jwt_required()
     @api.expect(user_model, validate=True)
     @api.response(201, "User successfully created")
     @api.response(400, "Invalid input data")
@@ -30,12 +30,11 @@ class UserList(Resource):
     def post(self):
         """Register a new user"""
         user_data = api.payload
-        """ TEMPORAL
         current_user = get_jwt()
 
         if not current_user.get("is_admin"):
             return {"error": "Admin privileges required"}, 403
-        """
+
         # Simulate email uniqueness check (to be replaced by real validation with persistence)
         if facade.get_user_by_email(user_data["email"]):
             return {"error": "Email already registered"}, 400
