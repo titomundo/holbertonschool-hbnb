@@ -110,7 +110,6 @@ class UserRepository(SQLAlchemyRepository):
         obj = self.get(obj_id)
         if obj:
             for key, value in data.items():
-                print(obj, key, value)
                 setattr(obj, key, value)
 
             # Make sure to hash password if updated
