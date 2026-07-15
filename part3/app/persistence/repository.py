@@ -1,6 +1,9 @@
 from abc import ABC, abstractmethod
 
 from app import db
+from app.models.amenity import Amenity
+from app.models.place import Place
+from app.models.review import Review
 from app.models.user import User
 
 
@@ -84,6 +87,7 @@ class SQLAlchemyRepository(Repository):
             for key, value in data.items():
                 setattr(obj, key, value)
             db.session.commit()
+            return obj
 
     def delete(self, obj_id):
         obj = self.get(obj_id)
@@ -101,3 +105,18 @@ class UserRepository(SQLAlchemyRepository):
 
     def get_user_by_email(self, email):
         return self.model.query.filter_by(email=email).first()
+
+
+class PlaceRepository(SQLAlchemyRepository):
+    def __init__(self):
+        super().__init__(Place)
+
+
+class ReviewRepository(SQLAlchemyRepository):
+    def __init__(self):
+        super().__init__(Review)
+
+
+class AmenityRepository(SQLAlchemyRepository):
+    def __init__(self):
+        super().__init__(Amenity)
