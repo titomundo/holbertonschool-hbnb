@@ -8,7 +8,6 @@ class Place(BaseModel):
     __tablename__ = "places"
 
     title = db.Column("title", db.String(100), nullable=False)
-    test = db.Column("test", db.String(100), nullable=True)
     description = db.Column("description", db.String(), default="")
     price = db.Column("price", db.Float, nullable=False)
     latitude = db.Column("latitude", db.Float, nullable=False)
