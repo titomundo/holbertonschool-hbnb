@@ -2,15 +2,16 @@ from app.models.amenity import Amenity
 from app.models.place import Place
 from app.models.review import Review
 from app.models.user import User
-from app.persistence.repository import InMemoryRepository, UserRepository
+from app.persistence.repository import (AmenityRepository, PlaceRepository,
+                                        ReviewRepository, UserRepository)
 
 
 class HBnBFacade:
     def __init__(self):
         self.user_repo = UserRepository()
-        self.place_repo = InMemoryRepository()
-        self.review_repo = InMemoryRepository()
-        self.amenity_repo = InMemoryRepository()
+        self.place_repo = PlaceRepository()
+        self.review_repo = ReviewRepository()
+        self.amenity_repo = AmenityRepository()
 
     #
     # User Methods

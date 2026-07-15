@@ -22,6 +22,7 @@ class AmenityList(Resource):
         amenity_data = api.payload
         current_user = get_jwt()
 
+
         if not current_user.get("is_admin"):
             return {"error": "Admin privileges required"}, 403
 

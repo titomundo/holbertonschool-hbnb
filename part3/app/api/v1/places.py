@@ -1,3 +1,4 @@
+from app.api.v1 import amenities
 from app.models import place
 from app.services import facade
 from flask_jwt_extended import (current_user, get_jwt, get_jwt_identity,
@@ -45,9 +46,7 @@ place_model = api.model(
         "latitude": fields.Float(required=True, description="Latitude of the place"),
         "longitude": fields.Float(required=True, description="Longitude of the place"),
         "owner": fields.Nested(user_model, description="Owner of the place"),
-        "amenities": fields.List(
-            fields.Nested(amenity_model), description="List of amenities"
-        ),
+        "amenities": fields.List(fields.String(description="List of amenities")),
         "reviews": fields.List(
             fields.Nested(review_model), description="List of reviews"
         ),
@@ -66,7 +65,6 @@ class PlaceList(Resource):
         """Register a new place"""
         place_data = api.payload
         amenities = place_data.get("amenities")
-
         user_id = get_jwt_identity()
         user = facade.get_user(user_id)
 
@@ -77,14 +75,13 @@ class PlaceList(Resource):
 
         if amenities:
             new_amenities = []
-
             for amenity in amenities:
                 new_amenity = facade.get_amenity(amenity)
-
+                print(new_amenity)
                 if not new_amenity:
                     return {"error": "amenity not found"}, 404
 
-                new_amenities.append(new_amenity.as_dict())
+                new_amenities.append(new_amenity)
 
             place_data["amenities"] = new_amenities
 
@@ -113,7 +110,7 @@ class PlaceResource(Resource):
         if not place:
             return {"error": "place not found"}, 404
 
-        owner = facade.get_user(place.owner_id)
+        amenities = [amenity.as_dict() for amenity in place.amenities]
 
         return {
             "id": place.id,
@@ -122,8 +119,8 @@ class PlaceResource(Resource):
             "price": place.price,
             "latitude": place.latitude,
             "longitude": place.longitude,
-            "owner": owner.as_dict(),
-            "amenities": place.amenities,
+            "owner": place.owner.as_dict(),
+            "amenities": amenities,
         }
 
     @jwt_required()
@@ -163,9 +160,5 @@ class PlaceResource(Resource):
             if not place:
                 return {"error": "place not found"}, 404
 
-            reviews = []
-
-            for review in facade.get_reviews_by_place(place_id):
-                reviews.append(review.as_dict())
-
+            reviews = [place.as_dict() for place in place.reviews]
             return reviews

@@ -1,7 +1,6 @@
-from flask_jwt_extended.utils import get_jwt
-
 from app.services import facade
 from flask_jwt_extended import current_user, get_jwt_identity, jwt_required
+from flask_jwt_extended.utils import get_jwt
 from flask_restx import Namespace, Resource, fields
 from jsonschema.validators import validate
 
@@ -39,7 +38,7 @@ class ReviewList(Resource):
         if place.owner_id == user_id:
             return {"error": "You cannot review your own place"}, 400
 
-        reviews = facade.get_reviews_by_place(place.id)
+        reviews = place.reviews
 
         for review in reviews:
             if review.user_id == user_id:
@@ -56,16 +55,7 @@ class ReviewList(Resource):
     @api.response(200, "List of reviews retrieved successfully")
     def get(self):
         """Retrieve a list of all reviews"""
-        reviews = []
-        for review in facade.get_all_reviews():
-            reviews.append(
-                {
-                    "id": review.id,
-                    "text": review.text,
-                    "rating": review.rating,
-                }
-            )
-
+        reviews = [review.as_dict() for review in facade.get_all_reviews()]
         return reviews, 200
 
 
@@ -124,6 +114,6 @@ class ReviewResource(Resource):
 
         if not is_admin and review.user_id != get_jwt_identity():
             return {"error": "Unauthorized action"}, 403
-        
+
         facade.delete_review(review_id)
         return {"message": "review deleted sucessfully"}, 200

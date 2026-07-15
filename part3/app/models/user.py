@@ -1,9 +1,8 @@
 import re
 
 from app import bcrypt, db
-from sqlalchemy.orm import validates
-
-from .base import BaseModel
+from app.models.base import BaseModel
+from sqlalchemy.orm import backref, validates
 
 
 class User(BaseModel):
@@ -16,6 +15,9 @@ class User(BaseModel):
     email = db.Column("email", db.String(120), nullable=False, unique=True)
     password = db.Column("password", db.String(128), nullable=False)
     is_admin = db.Column("is_admin", db.Boolean, default=False)
+
+    places = db.relationship("Place", backref="owner", lazy=True)
+    reviews = db.relationship("Review", backref="user", lazy=True)
 
     @validates("first_name")
     def validate_first_name(self, key, first_name):
@@ -58,12 +60,6 @@ class User(BaseModel):
     def verify_password(self, password):
         """Verifies if the provided password matches the hashed password."""
         return bcrypt.check_password_hash(self.password, password)
-
-    def add_place(self, place):
-        self.places.append(place)
-
-    def add_amenities(self, amenity):
-        self.amenities.append(amenity)
 
     def as_dict(self):
         return {
