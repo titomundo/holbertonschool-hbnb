@@ -106,6 +106,20 @@ class UserRepository(SQLAlchemyRepository):
     def get_user_by_email(self, email):
         return self.model.query.filter_by(email=email).first()
 
+    def update(self, obj_id, data):
+        obj = self.get(obj_id)
+        if obj:
+            for key, value in data.items():
+                print(obj, key, value)
+                setattr(obj, key, value)
+
+            # Make sure to hash password if updated
+            if data.get("password"):
+                obj.hash_password(data.get("password"))
+
+            db.session.commit()
+            return obj
+
 
 class PlaceRepository(SQLAlchemyRepository):
     def __init__(self):
