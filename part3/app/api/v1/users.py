@@ -74,9 +74,6 @@ class UserResource(Resource):
     @api.response(403, "Admin privileges required")
     def put(self, user_id):
         """Update an existing user"""
-        # beware that so far you can update your email to one already in use
-        # we really can't allow users to update their email until we have
-        # JWT tokens to know the actual email of the user making the request
         user_data = api.payload
         email = user_data.get("email")
         current_user = get_jwt()
