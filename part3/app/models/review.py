@@ -1,11 +1,11 @@
 from app import db
 from app.models.base import BaseModel
-from sqlalchemy import ForeignKey, Nullable
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import validates
 
 
 class Review(BaseModel):
-    __title__ = "reviews"
+    __tablename__ = "reviews"
 
     text = db.Column("text", db.String(1024), nullable=True)
     rating = db.Column("rating", db.Integer, nullable=False)
