@@ -1,5 +1,5 @@
 from app.services import facade
-from flask_jwt_extended import current_user, get_jwt, jwt_required
+from flask_jwt_extended import get_jwt, jwt_required
 from flask_restx import Namespace, Resource, fields
 
 api = Namespace("amenities", description="Amenity operations")
