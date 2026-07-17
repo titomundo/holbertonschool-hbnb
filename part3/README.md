@@ -78,13 +78,26 @@ hbnb/
 |PUT|`/reviews/<review_id>`|Update review by ID|
 |DELETE|`/reviews/<review_id>`|Delete review by ID|
 
+### Auth Endpoints
+| METHOD | ENDPOINT | RESULT |
+|--------|----------|--------|
+|POST|`/auth/login`|JWT Authentication token|
+
 ## Install and run
+The app requires Python 3.10 or higher to run.
 > You may have to use `python3` or `pip3` instead of `python` and `pip`.
 ```bash
-python -m venv .venv
+python -m venv venv
 source .venv/bin/activate
 pip install -r requirements.txt
 python run.py
+```
+
+### Initialize database
+To start/restart the database remove the `instance/development.db` file and run:
+```bash
+sqlite3 instance/development.db < database/schema.sql
+sqlite3 instance/development.db < database/seeder.sql
 ```
 
 The application will be available at http://localhost:5000
