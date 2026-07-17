@@ -1,0 +1,43 @@
+erDiagram
+User {
+    UUID id
+    String firstName
+    String lastName
+    String email
+    String password
+    Boolean is_admin
+}
+
+Place {
+    UUID id
+    String title
+    String description
+    Float price
+    Float latitude
+    Float longitud
+    UUID owner_id
+}
+
+Review {
+    UUID id
+    String text
+    Float rating
+    UUID user_id
+    UUID place_id
+}
+
+Amenity {
+    UUID id
+    String name
+}
+
+Place_Amenity {
+    place_id
+    amenity_id
+}
+
+User ||--|{ Place : owns
+Place }|--|{ Place_Amenity : has
+Amenity }|--|{ Place_Amenity : has
+Review }|--|| User : writes
+Review }|--|| Place : has
