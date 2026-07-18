@@ -166,7 +166,7 @@ main {
   margin-bottom: 0.75rem;
 }
 
-.card button {
+.card a {
   background-color: #7e8d85;
   color: #fff;
   border: none;
@@ -176,9 +176,10 @@ main {
   display: block;
   width: 100%;
   font-size: 1rem;
+  text-decoration: none;
 }
 
-.card button:hover {
+.card a:hover {
   background-color: #b3bfb8;
   cursor: pointer;
 }
