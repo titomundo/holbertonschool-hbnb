@@ -39,13 +39,12 @@ body {
 
 footer {
   text-align: center;
-  background-color: #6b9080;
-  color: #f4f4f4;
   padding: 1.5rem;
+  background-color: #e6e8e6;
 }
 
 header {
-  background-color: #a4c3b2;
+  background-color: #7e8d85;
   color: #fff;
   padding: 1rem;
   display: flex;
@@ -89,17 +88,17 @@ main {
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
   padding: 2rem;
-  border: 1px #CED0CE solid;
+  border: 1px #ced0ce solid;
   width: 400px;
   max-height: 600px;
-  background-color: #E6E8E6;
+  background-color: #e6e8e6;
   border-radius: 0.5rem;
   box-shadow: 1rem;
   color: #555;
 }
 
 .form button {
-  background-color: #7E8D85;
+  background-color: #7e8d85;
   color: #fff;
   border: none;
   padding: 0.5rem;
@@ -111,7 +110,7 @@ main {
 }
 
 .form button:hover {
-  background-color: #B3BFB8;
+  background-color: #b3bfb8;
   cursor: pointer;
 }
 
@@ -121,7 +120,7 @@ main {
   margin: 0.5rem 0;
   border-radius: 0.5rem;
   width: 100%;
-  border: 1px #CED0CE solid;
+  border: 1px #ced0ce solid;
 }
 
 .form label {
@@ -142,4 +141,53 @@ main {
 
 .shadow {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+#places-list ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.card {
+  color: #555;
+  border: 1px #ddd solid;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 20px;
+  text-align: center;
+}
+
+.card h3 {
+  margin-bottom: 0.75rem;
+}
+
+.card p {
+  margin-bottom: 0.75rem;
+}
+
+.card button {
+  background-color: #7e8d85;
+  color: #fff;
+  border: none;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  border-radius: 0.5rem;
+  display: block;
+  width: 100%;
+  font-size: 1rem;
+}
+
+.card button:hover {
+  background-color: #b3bfb8;
+  cursor: pointer;
+}
+
+main h1 {
+  text-align: center;
+  padding: 1rem;
+}
+
+#filter {
+  text-align: center;
 }
