@@ -65,6 +65,7 @@ function displayPlaces(places) {
     const link = document.createElement("a");
 
     card.classList.add("card", "shadow");
+    card.dataset.price = place.price;
     title.textContent = place.title;
     description.textContent = `Price per night: $${place.price}`;
     link.textContent = "See details";
@@ -81,6 +82,7 @@ function displayPlaces(places) {
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("login-form");
   const token = getCookie("token");
+  const priceFilter = document.getElementById("price-filter");
 
   if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
@@ -89,6 +91,39 @@ document.addEventListener("DOMContentLoaded", () => {
       const email = formData.get("email");
       const password = formData.get("password");
       loginUser(email, password);
+    });
+  }
+
+  if (priceFilter) {
+    const prices = [10, 50, 100];
+    const default_opt = document.createElement("option");
+    default_opt.value = -1;
+    default_opt.textContent = "All";
+    priceFilter.appendChild(default_opt);
+
+    prices.forEach((price) => {
+      option = document.createElement("option");
+      option.value = price;
+      option.textContent = price;
+
+      priceFilter.appendChild(option);
+    });
+
+    priceFilter.addEventListener("change", (event) => {
+      const value = parseInt(event.target.selectedOptions[0].value, 10);
+      const places =
+        document.getElementById("places-list").children[0].children;
+
+      for (var i = 0; i < places.length; i++) {
+        place = places[i];
+        place_price = parseInt(place.firstChild.dataset.price, 10);
+
+        if (place_price <= value || value < 0) {
+          place.style.display = "block";
+        } else {
+          place.style.display = "none";
+        }
+      }
     });
   }
 
