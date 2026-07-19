@@ -1,3 +1,5 @@
+from operator import ne
+
 from app.services import facade
 from flask_jwt_extended import current_user, get_jwt_identity, jwt_required
 from flask_jwt_extended.utils import get_jwt
@@ -55,7 +57,14 @@ class ReviewList(Resource):
     @api.response(200, "List of reviews retrieved successfully")
     def get(self):
         """Retrieve a list of all reviews"""
-        reviews = [review.as_dict() for review in facade.get_all_reviews()]
+        # reviews = [review.as_dict() for review in facade.get_all_reviews()]
+        reviews = []
+
+        for review in facade.get_all_reviews():
+            new_review = review.as_dict()
+            new_review["user"] = review.user
+            print(review.user)
+
         return reviews, 200
 
 

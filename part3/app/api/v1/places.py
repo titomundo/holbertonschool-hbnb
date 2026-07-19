@@ -160,5 +160,12 @@ class PlaceResource(Resource):
             if not place:
                 return {"error": "place not found"}, 404
 
-            reviews = [place.as_dict() for place in place.reviews]
+            # reviews = [place.as_dict() for place in place.reviews]
+            reviews = []
+            for review in place.reviews:
+                new_review = review.as_dict()
+                new_review["user"] = review.user.as_dict()
+                reviews.append(new_review)
+                print(review.user)
+
             return reviews
