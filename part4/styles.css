@@ -88,6 +88,7 @@ main {
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
   padding: 2rem;
+  margin: 20px;
   border: 1px #ced0ce solid;
   width: 400px;
   max-height: 600px;
@@ -95,6 +96,10 @@ main {
   border-radius: 0.5rem;
   box-shadow: 1rem;
   color: #555;
+}
+
+.form div {
+  margin-top: 0.75rem;
 }
 
 .form button {
@@ -121,10 +126,17 @@ main {
   border-radius: 0.5rem;
   width: 100%;
   border: 1px #ced0ce solid;
+  display: block;
+}
+
+.form textarea {
+  width: 100%;
+  resize: none;
 }
 
 .form label {
   font-size: 0.85rem;
+  display: block;
 }
 
 .form h2 {
@@ -143,7 +155,7 @@ main {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
-#places-list ul {
+#places-list ul, #reviews ul {
   list-style: none;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -191,4 +203,8 @@ main h1 {
 
 #filter {
   text-align: center;
+}
+
+#amenities {
+  list-style: none;
 }

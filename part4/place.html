@@ -1,29 +1,87 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Place Details</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Place Details</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
+  <div class="layout">
+    <header>
+      <nav>
+        <ul class="navbar">
+          <li>
+            <a href="index.html">
+              <img class="img" width="100" src="images/logo.png" alt="HBnB Logo" />
+            </a>
+          </li>
+          <li>
+            <a href="login.html" id="login-link">Login</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
     <main>
-        <section id="place-details">
-            <!-- Place details will be populated dynamically -->
-        </section>
-        <section id="reviews">
-            <!-- Reviews will be populated dynamically -->
-        </section>
-        <section id="add-review">
-            <h2>Add a Review</h2>
-            <form id="review-form">
-                <label for="review-text">Review:</label>
-                <textarea id="review-text" name="review-text" required></textarea>
-                
-                <button type="submit">Submit</button>
-            </form>
-        </section>
+      <section id="place-details">
+        <!-- Place details will be populated dynamically -->
+        <h1 id="title"></h1>
+        <div class="card shadow">
+          <p>
+            <b>Host:</b>
+            <span id="host"></span>
+          </p>
+          <p>
+            <b>Price per night:</b>
+            <span id="price"></span>
+          </p>
+          <p>
+            <b>Description:</b>
+            <span id="description"></span>
+          </p>
+          <div>
+            <p><b>Amenities:</b></p>
+            <ul id="amenities"></ul>
+          </div>
+        </div>
+      </section>
+      <section id="reviews">
+        <!-- Reviews will be populated dynamically -->
+        <h1>Reviews</h1>
+        <ul></ul>
+      </section>
+      <section id="add-review">
+        <h1>Add a Review</h1>
+        <div class="form-wrapper">
+          <form id="review-form" class="shadow form">
+            <h2>Review:</h2>
+            <div>
+              <label for="review-text">Review:</label>
+              <textarea id="review-text" name="review-text" required></textarea>
+            </div>
+            <div>
+              <label for="rating">Rating:</label>
+              <select id="rating" name="rating" required>
+                <!-- Options for rating -->
+                <option value="5">5 Stars</option>
+                <option value="4">4 Stars</option>
+                <option value="3">3 Stars</option>
+                <option value="2">2 Stars</option>
+                <option value="1">1 Star</option>
+              </select>
+            </div>
+            <button type="submit">Submit</button>
+          </form>
+        </div>
+      </section>
     </main>
-    <script src="scripts.js"></script>
+    <footer>
+      <p>2026 HBnB. All Rights Reserved.</p>
+    </footer>
+  </div>
+  <script src="scripts.js"></script>
 </body>
+
 </html>
